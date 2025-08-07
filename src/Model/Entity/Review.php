@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Symfony\Component\Validator\Constraints\Range;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[Entity]
 class Review
@@ -29,11 +30,13 @@ class Review
     #[JoinColumn(nullable: false)]
     private User $user;
 
+    #[Assert\NotBlank(message: "La note est obligatoire.")]
     #[Range(min: 1, max: 5)]
     #[Column]
     private int $rating;
 
     #[Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Length(max:500)]
     private ?string $comment = null;
 
     public function getId(): ?int

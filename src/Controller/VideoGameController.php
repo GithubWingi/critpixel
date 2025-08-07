@@ -35,6 +35,10 @@ final class VideoGameController extends AbstractController
     #[Route('{slug}', name: 'show', methods: [Request::METHOD_GET, Request::METHOD_POST])]
     public function show(VideoGame $videoGame, EntityManagerInterface $entityManager, Request $request): Response
     {
+        if ($request->isMethod('POST')) {
+            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        }
+
         $review = new Review();
 
         $form = $this->createForm(ReviewType::class, $review)->handleRequest($request);

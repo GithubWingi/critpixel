@@ -11,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Range;
 
 final class ReviewType extends AbstractType
 {
@@ -30,7 +32,14 @@ final class ReviewType extends AbstractType
                     '3' => 3,
                     '4' => 4,
                     '5' => 5,
-                ]
+                ],
+                'placeholder' => 'Choisir une note',
+                'required' => true,
+                'empty_data' => '',
+                'constraints' => [
+                    new NotBlank(['message' => 'La note est obligatoire.']),
+                    new Range(['min' => 1, 'max' => 5]),
+                ],
             ])
             ->add('comment', TextareaType::class, [
                 'label' => 'Commentaire',
