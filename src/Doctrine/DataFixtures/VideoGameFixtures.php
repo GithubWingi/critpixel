@@ -61,27 +61,31 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
 
 
         // Ajout des reviews
-        // array_walk($videoGames, function (VideoGame $videoGame, int $index) use ($users,$groupCount, $manager) {
-        //     $filteredUsers = $users[$index % $groupCount];
+        array_walk($videoGames, function (VideoGame $videoGame, int $index) use ($users, $groupCount, $manager) {
+            $filteredUsers = array_filter(
+                $users[$index % $groupCount],
+                fn(User $u) => $u->getUsername() !== 'user+0' // Exclure cet utilisateur
+            );
 
-        //     foreach ($filteredUsers as $i => $user) {
-        //         /** @var string $comment */
-        //         $comment = $this->faker->paragraphs(1, true);
+            foreach ($filteredUsers as $i => $user) {
+                /** @var string $comment */
+                $comment = $this->faker->paragraphs(1, true);
 
-        //         $review = (new Review())
-        //             ->setUser($user)
-        //             ->setVideoGame($videoGame)
-        //             ->setRating($this->faker->numberBetween(1, 5))
-        //             ->setComment($comment);
+                $review = (new Review())
+                    ->setUser($user)
+                    ->setVideoGame($videoGame)
+                    ->setRating($this->faker->numberBetween(1, 5))
+                    ->setComment($comment);
 
-        //         $videoGame->getReviews()->add($review);
+                $videoGame->getReviews()->add($review);
 
-        //         $manager->persist($review);
+                $manager->persist($review);
 
-        //         $this->calculateAverageRating->calculateAverage($videoGame);
-        //         $this->countRatingsPerValue->countRatingsPerValue($videoGame);
-        //     }
-        // });
+                $this->calculateAverageRating->calculateAverage($videoGame);
+                $this->countRatingsPerValue->countRatingsPerValue($videoGame);
+            }
+        });
+
 
         $manager->flush();
     }
