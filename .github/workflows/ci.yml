@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build:
@@ -43,6 +43,13 @@ jobs:
 
       # 4️⃣ Préparer la base de données
       - name: Prepare database
+        run: |
+          sudo apt-get install -y mysql-client
+          until mysqladmin ping -h 127.0.0.1 --silent; do
+            sleep 1
+          done
+
+      - name: Create database schema
         run: |
           php bin/console doctrine:database:create --env=test
           php bin/console doctrine:schema:create --env=test
