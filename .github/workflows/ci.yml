@@ -57,12 +57,17 @@ jobs:
       - name: Load fixtures
         run: php bin/console doctrine:fixtures:load --env=test --no-interaction
 
+
+      - name: Check DB content
+        run: php bin/console doctrine:query:sql "SELECT COUNT(*) as count FROM user;" --env=test
+
+      - name: Clear & warmup cache
+        run: |
+          php bin/console cache:clear --env=test
+          php bin/console cache:warmup --env=test
+
       - name: Compile assets (Sass)
         run: php bin/console sass:build
-
-      - run: php bin/console cache:clear --env=test
-      - run: php bin/console cache:warmup --env=test
-
 
       # 5️⃣ Lancer les tests PHPUnit
       - name: Run PHPUnit
