@@ -60,6 +60,10 @@ jobs:
       - name: Compile assets (Sass)
         run: php bin/console sass:build
 
+      - run: php bin/console cache:clear --env=test
+      - run: php bin/console cache:warmup --env=test
+
+
       # 5️⃣ Lancer les tests PHPUnit
       - name: Run PHPUnit
         run: vendor/bin/phpunit
