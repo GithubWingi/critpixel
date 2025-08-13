@@ -7,7 +7,6 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "ext-pgsql": "*",
         "ext-intl": "*",
         "ext-mbstring": "*",
         "doctrine/dbal": "^3",
@@ -75,32 +74,15 @@
         "symfony/polyfill-php81": "*"
     },
     "scripts": {
-        "db": [
-            "symfony console doctrine:database:drop -f --if-exists",
-            "symfony console doctrine:database:create",
-            "symfony console doctrine:migrations:migrate -n",
-            "symfony console doctrine:fixtures:load -n --purge-with-truncate"
+        "db-reset": [
+            "php bin/console doctrine:database:drop --env=test --force --if-exists",
+            "php bin/console doctrine:database:create --env=test",
+            "php bin/console doctrine:schema:create --env=test",
+            "php bin/console doctrine:fixtures:load --env=test --no-interaction"
         ],
-        "db-test": [
-            "symfony console doctrine:database:drop -f --if-exists --env=test",
-            "symfony console doctrine:database:create --env=test",
-            "symfony console doctrine:migrations:migrate -n --env=test",
-            "symfony console doctrine:fixtures:load -n --purge-with-truncate --env=test"
-        ],
-        "test": [
-            "composer db-test",
-            "symfony php bin/phpunit"
-        ],
-        "auto-scripts": {
-            "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "importmap:install": "symfony-cmd"
-        },
-        "post-install-cmd": [
-            "@auto-scripts"
-        ],
-        "post-update-cmd": [
-            "@auto-scripts"
+        "test-all": [
+            "@db-reset",
+            "php vendor/bin/phpunit --colors=always"
         ]
     },
     "conflict": {
