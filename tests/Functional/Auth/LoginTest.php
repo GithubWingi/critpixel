@@ -11,7 +11,9 @@ final class LoginTest extends FunctionalTestCase
 {
     public function testThatLoginShouldSucceeded(): void
     {
-        $this->get('/auth/login');
+        $crawler = $this->client->request('GET', '/auth/login');
+        file_put_contents('login.html', $crawler->html());
+
 
         $this->client->submitForm('Se connecter', [
             'email' => 'user+1@email.com',
