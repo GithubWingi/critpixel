@@ -14,6 +14,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
 
+/**
+ * @extends AbstractType<Review>
+ */
 final class ReviewType extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver): void

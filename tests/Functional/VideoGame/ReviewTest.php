@@ -120,7 +120,7 @@ final class ReviewTest extends FunctionalTestCase
     /**
      * Fournit les cas où un utilisateur non connecté ne doit pas accéder au formulaire ou soumettre une note.
      *
-     * @return iterable<array{string, string, int, (callable|null)}>>
+     * @return iterable<string, array{string, string, int, (callable|null)}>
      */
     public static function provideUnauthenticatedAccessScenarios(): iterable
     {
@@ -139,6 +139,9 @@ final class ReviewTest extends FunctionalTestCase
         ];
     }
 
+    /**
+     * @return iterable<string, array{rating: string|null, comment: string|null}>
+     */
     public static function provideInvalidReviews(): iterable
     {
         yield "Commentaire trop long" => [

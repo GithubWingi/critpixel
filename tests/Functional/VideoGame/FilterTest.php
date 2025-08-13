@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\VideoGame;
 
-use App\Model\Entity\Tag;
 use App\Tests\Functional\FunctionalTestCase;
+use InvalidArgumentException;
 
 final class FilterTest extends FunctionalTestCase
 {
@@ -30,6 +30,10 @@ final class FilterTest extends FunctionalTestCase
 
     /**
      * @dataProvider tagProvider
+     *
+     * @param array<int|string>     $tags
+     * @param int                   $expectedCount
+     * @param string|null           $expectedException
      */
     public function testShouldFilterByTagsVideoGames(
         array $tags,
@@ -59,7 +63,10 @@ final class FilterTest extends FunctionalTestCase
         self::assertSelectorCount($expectedCount, 'article.game-card');
     }
 
-    public function tagProvider(): array
+    /**
+     * @return array<string, array{0: array<int>, 1: int, 2?: class-string<InvalidArgumentException>}>
+     */
+    public static function tagProvider(): array
     {
         return [
             'no tags' => [
@@ -77,7 +84,7 @@ final class FilterTest extends FunctionalTestCase
             'non-existent tag' => [
                 [999], // id qui n’existe pas dans le formulaire
                 0, // pas utilisé ici car exception attendue
-                \InvalidArgumentException::class,
+                InvalidArgumentException::class,
             ],
         ];
     }

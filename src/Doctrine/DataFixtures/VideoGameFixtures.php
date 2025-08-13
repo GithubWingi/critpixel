@@ -14,8 +14,6 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Generator;
 
-use function array_fill_callback;
-
 final class VideoGameFixtures extends Fixture implements DependentFixtureInterface
 {
     public function __construct(
@@ -34,40 +32,33 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
 
         $tags = $manager->getRepository(Tag::class)->findAll();
 
-        // Création des jeux vidéos
-        $videoGames = array_fill_callback(
-            0,
-            50,
-            fn(int $index): VideoGame => (new VideoGame)
-                ->setTitle(sprintf('Jeu vidéo %d', $index))
+        // Création et persistance des jeux vidéos
+        for ($i = 0; $i < 50; $i++) {
+            /** @var VideoGame $videoGame */
+            $videoGame = (new VideoGame())
+                ->setTitle(sprintf('Jeu vidéo %d', $i))
                 ->setDescription($this->faker->paragraphs(10, true))
                 ->setReleaseDate(new DateTimeImmutable())
                 ->setTest($this->faker->paragraphs(6, true))
-                ->setRating(($index % 5) + 1)
-                ->setImageName(sprintf('video_game_%d.png', $index))
-                ->setImageSize(2_098_872)
-        );
+                ->setRating(($i % 5) + 1)
+                ->setImageName(sprintf('video_game_%d.png', $i))
+                ->setImageSize(2_098_872);
 
-        // Ajout des tags
-        array_walk($videoGames, static function (VideoGame $videoGame, int $index) use ($tags) {
+            // Ajout des tags
             for ($tagIndex = 0; $tagIndex < 5; $tagIndex++) {
-                $videoGame->getTags()->add($tags[($index + $tagIndex) % count($tags)]);
+                $videoGame->getTags()->add($tags[($i + $tagIndex) % count($tags)]);
             }
-        });
 
-        array_walk($videoGames, [$manager, 'persist']);
+            $manager->persist($videoGame);
 
-        $manager->flush();
-
-
-        // Ajout des reviews
-        array_walk($videoGames, function (VideoGame $videoGame, int $index) use ($users, $groupCount, $manager) {
+            // Ajout des reviews
             $filteredUsers = array_filter(
-                $users[$index % $groupCount],
+                $users[$i % $groupCount],
                 fn(User $u) => $u->getUsername() !== 'user+0' // Exclure cet utilisateur
             );
 
-            foreach ($filteredUsers as $i => $user) {
+            /** @var User $user */
+            foreach ($filteredUsers as $user) {
                 /** @var string $comment */
                 $comment = $this->faker->paragraphs(1, true);
 
@@ -84,8 +75,7 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
                 $this->calculateAverageRating->calculateAverage($videoGame);
                 $this->countRatingsPerValue->countRatingsPerValue($videoGame);
             }
-        });
-
+        }
 
         $manager->flush();
     }
