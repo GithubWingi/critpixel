@@ -8,22 +8,19 @@ use App\Doctrine\Repository\VideoGameRepository;
 use App\Form\FilterType;
 use App\Model\Entity\VideoGame;
 use App\Model\ValueObject\Page;
-use Countable;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use IteratorAggregate;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Traversable;
 
 /**
- * @implements IteratorAggregate<VideoGame>
+ * @implements \IteratorAggregate<VideoGame>
  */
-final class VideoGamesList implements Countable, IteratorAggregate
+final class VideoGamesList implements \Countable, \IteratorAggregate
 {
     private FormView $form;
-    
+
     private Filter $filter;
 
     /**
@@ -42,7 +39,7 @@ final class VideoGamesList implements Countable, IteratorAggregate
         private UrlGeneratorInterface $urlGenerator,
         private FormFactoryInterface $formFactory,
         private VideoGameRepository $videoGameRepository,
-        private Pagination  $pagination,
+        private Pagination $pagination,
     ) {
     }
 
@@ -51,7 +48,7 @@ final class VideoGamesList implements Countable, IteratorAggregate
         return $this->form;
     }
 
-      public function handleRequest(Request $request): self
+    public function handleRequest(Request $request): self
     {
         $this->filter = new Filter();
 
@@ -145,7 +142,7 @@ final class VideoGamesList implements Countable, IteratorAggregate
         return $this->pagination;
     }
 
-    public function getIterator(): Traversable
+    public function getIterator(): \Traversable
     {
         return $this->data;
     }

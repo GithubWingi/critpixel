@@ -10,7 +10,7 @@ final class TagFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        for ($i = 0; $i < 25; $i++) {
+        for ($i = 0; $i < 25; ++$i) {
             $tag = (new Tag())->setName(sprintf('Tag %d', $i));
             $manager->persist($tag);
         }

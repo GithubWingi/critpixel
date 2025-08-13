@@ -13,7 +13,7 @@ final class Filter
      */
     public function __construct(
         private ?string $search = null,
-        private array $tags = []
+        private array $tags = [],
     ) {
     }
 
@@ -25,6 +25,7 @@ final class Filter
     public function setSearch(?string $search): Filter
     {
         $this->search = $search;
+
         return $this;
     }
 
@@ -42,6 +43,7 @@ final class Filter
     public function setTags(array $tags): Filter
     {
         $this->tags = $tags;
+
         return $this;
     }
 }

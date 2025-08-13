@@ -8,7 +8,6 @@ use App\Model\Entity\User;
 use App\Model\Entity\VideoGame;
 use App\Rating\CalculateAverageRating;
 use App\Rating\CountRatingsPerValue;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -19,8 +18,9 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
     public function __construct(
         private readonly Generator $faker,
         private readonly CalculateAverageRating $calculateAverageRating,
-        private readonly CountRatingsPerValue $countRatingsPerValue
-    ) {}
+        private readonly CountRatingsPerValue $countRatingsPerValue,
+    ) {
+    }
 
     public function load(ObjectManager $manager): void
     {
@@ -33,19 +33,19 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
         $tags = $manager->getRepository(Tag::class)->findAll();
 
         // Création et persistance des jeux vidéos
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 50; ++$i) {
             /** @var VideoGame $videoGame */
             $videoGame = (new VideoGame())
                 ->setTitle(sprintf('Jeu vidéo %d', $i))
                 ->setDescription($this->faker->paragraphs(10, true))
-                ->setReleaseDate(new DateTimeImmutable())
+                ->setReleaseDate(new \DateTimeImmutable())
                 ->setTest($this->faker->paragraphs(6, true))
                 ->setRating(($i % 5) + 1)
                 ->setImageName(sprintf('video_game_%d.png', $i))
                 ->setImageSize(2_098_872);
 
             // Ajout des tags
-            for ($tagIndex = 0; $tagIndex < 5; $tagIndex++) {
+            for ($tagIndex = 0; $tagIndex < 5; ++$tagIndex) {
                 $videoGame->getTags()->add($tags[($i + $tagIndex) % count($tags)]);
             }
 
@@ -54,7 +54,7 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
             // Ajout des reviews
             $filteredUsers = array_filter(
                 $users[$i % $groupCount],
-                fn(User $u) => $u->getUsername() !== 'user+0' // Exclure cet utilisateur
+                fn (User $u) => 'user+0' !== $u->getUsername() // Exclure cet utilisateur
             );
 
             /** @var User $user */

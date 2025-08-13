@@ -24,7 +24,6 @@ final class CalculateAverageRatingTest extends TestCase
 
         // Assert : la moyenne calculée doit correspondre à la valeur attendue
         self::assertSame($expectedAverageRating, $videoGame->getAverageRating());
-
     }
 
     /**
@@ -32,13 +31,14 @@ final class CalculateAverageRatingTest extends TestCase
      * - Sans aucune note
      * - Avec une seule note
      * - Avec plusieurs notes (moyenne attendue : 4)
+     *
      * @return iterable<array{VideoGame, ?int}>
      */
     public static function provideVideoGame(): iterable
     {
-        yield 'No review' => [new VideoGame(), null,];
+        yield 'No review' => [new VideoGame(), null];
 
-        yield 'One review' => [self::createVideoGame(5), 5,];
+        yield 'One review' => [self::createVideoGame(5), 5];
 
         yield 'A lot of reviews' => [
             self::createVideoGame(1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5),

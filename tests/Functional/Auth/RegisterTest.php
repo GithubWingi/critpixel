@@ -30,7 +30,7 @@ final class RegisterTest extends FunctionalTestCase
 
     /**
      * @param array<string, string> $formData
-     * 
+     *
      * @dataProvider provideInvalidFormData
      */
     public function testThatRegistrationShouldFailed(array $formData): void
@@ -65,7 +65,7 @@ final class RegisterTest extends FunctionalTestCase
         return [
             'register[username]' => 'username',
             'register[email]' => 'user@email.com',
-            'register[plainPassword]' => 'SuperPassword123!'
+            'register[plainPassword]' => 'SuperPassword123!',
         ] + $overrideData;
     }
 }

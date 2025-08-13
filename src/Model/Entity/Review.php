@@ -11,8 +11,8 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
-use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Range;
 
 #[Entity]
 class Review
@@ -30,13 +30,13 @@ class Review
     #[JoinColumn(nullable: false)]
     private User $user;
 
-    #[Assert\NotBlank(message: "La note est obligatoire.")]
+    #[Assert\NotBlank(message: 'La note est obligatoire.')]
     #[Range(min: 1, max: 5)]
     #[Column]
     private int $rating;
 
     #[Column(type: Types::TEXT, nullable: true)]
-    #[Assert\Length(max:500)]
+    #[Assert\Length(max: 500)]
     private ?string $comment = null;
 
     public function getId(): ?int
@@ -52,6 +52,7 @@ class Review
     public function setVideoGame(VideoGame $videoGame): Review
     {
         $this->videoGame = $videoGame;
+
         return $this;
     }
 
@@ -63,6 +64,7 @@ class Review
     public function setUser(User $user): Review
     {
         $this->user = $user;
+
         return $this;
     }
 
@@ -74,6 +76,7 @@ class Review
     public function setRating(int $rating): Review
     {
         $this->rating = $rating;
+
         return $this;
     }
 
@@ -85,6 +88,7 @@ class Review
     public function setComment(?string $comment): Review
     {
         $this->comment = $comment;
+
         return $this;
     }
 }

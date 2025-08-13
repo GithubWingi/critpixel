@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Functional\VideoGame;
 
 use App\Tests\Functional\FunctionalTestCase;
-use InvalidArgumentException;
 
 final class FilterTest extends FunctionalTestCase
 {
@@ -31,30 +30,28 @@ final class FilterTest extends FunctionalTestCase
     /**
      * @dataProvider tagProvider
      *
-     * @param array<int|string>     $tags
-     * @param int                   $expectedCount
-     * @param string|null           $expectedException
+     * @param array<int|string> $tags
      */
     public function testShouldFilterByTagsVideoGames(
         array $tags,
         int $expectedCount,
-        ?string $expectedException = null
+        ?string $expectedException = null,
     ): void {
         // Accès à la page d'accueil
-        $crawler = $this->get("/");
+        $crawler = $this->get('/');
 
         self::assertResponseIsSuccessful();
         self::assertSelectorCount(10, 'article.game-card');
 
         // Formulaire
-        $form = $crawler->selectButton("Filtrer")->form();
+        $form = $crawler->selectButton('Filtrer')->form();
 
         if ($expectedException) {
             $this->expectException($expectedException);
         }
 
         // Simuler le click sur un tag
-        $form["filter[tags]"] = $tags;
+        $form['filter[tags]'] = $tags;
 
         // Soumission du formulaire
         $this->client->submit($form);
@@ -64,7 +61,7 @@ final class FilterTest extends FunctionalTestCase
     }
 
     /**
-     * @return array<string, array{0: array<int>, 1: int, 2?: class-string<InvalidArgumentException>}>
+     * @return array<string, array{0: array<int>, 1: int, 2?: class-string<\InvalidArgumentException>}>
      */
     public static function tagProvider(): array
     {
@@ -84,7 +81,7 @@ final class FilterTest extends FunctionalTestCase
             'non-existent tag' => [
                 [999], // id qui n’existe pas dans le formulaire
                 0, // pas utilisé ici car exception attendue
-                InvalidArgumentException::class,
+                \InvalidArgumentException::class,
             ],
         ];
     }

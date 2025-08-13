@@ -16,19 +16,18 @@ final class ReviewTest extends FunctionalTestCase
         // Connexion de l'utilisateur
         $this->login();
 
-        $expectedRating = "3";
-        $expectedComment = "Un bon petit jeu";
+        $expectedRating = '3';
+        $expectedComment = 'Un bon petit jeu';
 
         // Accès à la page du jeu vidéo
-        $crawler = $this->get("/jeu-video-0");
+        $crawler = $this->get('/jeu-video-0');
         self::assertResponseIsSuccessful();
 
         // Remplissage du formulaire
-        $form = $crawler->selectButton("Poster")->form([
-            "review[rating]" => $expectedRating,
-            "review[comment]" => $expectedComment,
+        $form = $crawler->selectButton('Poster')->form([
+            'review[rating]' => $expectedRating,
+            'review[comment]' => $expectedComment,
         ]);
-
 
         // Envoi du formulaire
         $this->client->submit($form);
@@ -41,20 +40,20 @@ final class ReviewTest extends FunctionalTestCase
         self::assertSelectorNotExists("form[name='review']");
 
         // Vérifie que les données sont visibles sur la page
-        self::assertSelectorTextContains("div.list-group-item:last-child h3", "user+0");
-        self::assertSelectorTextContains("div.list-group-item:last-child p", $expectedComment);
-        self::assertSelectorTextContains("div.list-group-item:last-child span.value", $expectedRating);
+        self::assertSelectorTextContains('div.list-group-item:last-child h3', 'user+0');
+        self::assertSelectorTextContains('div.list-group-item:last-child p', $expectedComment);
+        self::assertSelectorTextContains('div.list-group-item:last-child span.value', $expectedRating);
 
         // Vérifie que la review est bien présente en base de données
         $user = $this->getUser();
         $videoGame = $this->getEntityManager()->getRepository(VideoGame::class)->findOneBy([
-            "slug" => "jeu-video-0",
+            'slug' => 'jeu-video-0',
         ]);
         self::assertNotNull($videoGame);
 
         $review = $this->getEntityManager()->getRepository(Review::class)->findOneBy([
-            "videoGame" => $videoGame,
-            "user" => $user,
+            'videoGame' => $videoGame,
+            'user' => $user,
         ]);
 
         self::assertNotNull($review);
@@ -76,9 +75,9 @@ final class ReviewTest extends FunctionalTestCase
 
         // Remplit les champs du formulaire uniquement si les données sont fournies
         $form = $crawler->selectButton('Poster')->form();
-        $form["review[rating]"] = $rating ?? '';
-        if ($comment !== null) {
-            $form["review[comment]"] = $comment;
+        $form['review[rating]'] = $rating ?? '';
+        if (null !== $comment) {
+            $form['review[comment]'] = $comment;
         }
 
         // Soumet le formulaire avec les données invalides
@@ -96,11 +95,11 @@ final class ReviewTest extends FunctionalTestCase
         string $method,
         string $uri,
         int $expectedStatusCode,
-        ?callable $assertion = null
+        ?callable $assertion = null,
     ): void {
-        if ($method === 'GET') {
+        if ('GET' === $method) {
             $this->get($uri);
-        } elseif ($method === 'POST') {
+        } elseif ('POST' === $method) {
             $this->post($uri, [
                 'review' => [
                     'rating' => '3',
@@ -112,7 +111,7 @@ final class ReviewTest extends FunctionalTestCase
         self::assertResponseStatusCodeSame($expectedStatusCode);
 
         // Applique une assertion personnalisée si fournie
-        if ($assertion !== null) {
+        if (null !== $assertion) {
             $assertion();
         }
     }
@@ -128,7 +127,7 @@ final class ReviewTest extends FunctionalTestCase
             'GET',
             '/jeu-video-0',
             Response::HTTP_OK,
-            fn() => self::assertSelectorNotExists('form[name="review"]'),
+            fn () => self::assertSelectorNotExists('form[name="review"]'),
         ];
 
         yield 'POST - refusé car non connecté' => [
@@ -144,14 +143,14 @@ final class ReviewTest extends FunctionalTestCase
      */
     public static function provideInvalidReviews(): iterable
     {
-        yield "Commentaire trop long" => [
-            "rating" => "3",
-            "comment" => str_repeat("a", 501)
+        yield 'Commentaire trop long' => [
+            'rating' => '3',
+            'comment' => str_repeat('a', 501),
         ];
 
-        yield "Note manquante" => [
-            "rating" => null,
-            "comment" => "Pas de note"
+        yield 'Note manquante' => [
+            'rating' => null,
+            'comment' => 'Pas de note',
         ];
     }
 }

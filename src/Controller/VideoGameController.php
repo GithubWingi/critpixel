@@ -52,6 +52,7 @@ final class VideoGameController extends AbstractController
             $review->setUser($user);
             $entityManager->persist($review);
             $entityManager->flush();
+
             return $this->redirectToRoute('video_games_show', ['slug' => $videoGame->getSlug()]);
         }
 

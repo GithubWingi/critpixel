@@ -78,21 +78,17 @@ final class CountRatingsPerValueTest extends TestCase
             $state->increaseOne();
         }
 
-
         for ($i = 0; $i < $two; ++$i) {
             $state->increaseTwo();
         }
-
 
         for ($i = 0; $i < $three; ++$i) {
             $state->increaseThree();
         }
 
-
         for ($i = 0; $i < $four; ++$i) {
             $state->increaseFour();
         }
-
 
         for ($i = 0; $i < $five; ++$i) {
             $state->increaseFive();

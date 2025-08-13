@@ -8,10 +8,9 @@ use Doctrine\Persistence\ObjectManager;
 
 final class UserFixtures extends Fixture
 {
-
     public function load(ObjectManager $manager): void
     {
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $user = (new User())
                 ->setEmail(sprintf('user+%d@email.com', $i))
                 ->setPlainPassword('password')
