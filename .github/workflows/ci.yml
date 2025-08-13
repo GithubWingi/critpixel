@@ -35,11 +35,11 @@ jobs:
         with:
           php-version: '8.2'
           extensions: mbstring, intl, pdo_mysql
-          coverage: none
+          tools: composer
 
       # 3️⃣ Installation des dépendances
       - name: Install dependencies
-        run: composer install --no-progress --no-interaction
+        run: composer install
 
       # 4️⃣ Préparer la base de données
       - name: Prepare database
@@ -57,9 +57,12 @@ jobs:
       - name: Load fixtures
         run: php bin/console doctrine:fixtures:load --env=test --no-interaction
 
+      - name: Compile assets (Sass)
+        run: php bin/console sass:build
+
       # 5️⃣ Lancer les tests PHPUnit
       - name: Run PHPUnit
-        run: vendor/bin/phpunit --testdox
+        run: vendor/bin/phpunit
 
       # 6️⃣ Analyse PHPStan
       - name: Run PHPStan
@@ -67,4 +70,4 @@ jobs:
 
       # 7️⃣ Vérification du style avec PHP CS Fixer
       - name: Run PHP CS Fixer
-        run: vendor/bin/php-cs-fixer fix --dry-run --diff
+        run: vendor/bin/php-cs-fixer fix --diff
