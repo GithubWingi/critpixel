@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      # 1️⃣ Récupération du code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2️⃣ Installation de PHP et extensions nécessaires
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, pdo_mysql
+          coverage: none
+
+      # 3️⃣ Installation des dépendances
+      - name: Install dependencies
+        run: composer install --no-progress --no-interaction
+
+      # 4️⃣ Préparer la base de données
+      - name: Prepare database
+        run: |
+          php bin/console doctrine:database:create --env=test
+          php bin/console doctrine:schema:create --env=test
+
+      # 5️⃣ Lancer les tests PHPUnit
+      - name: Run PHPUnit
+        run: vendor/bin/phpunit --testdox
+
+      # 6️⃣ Analyse PHPStan
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse
+
+      # 7️⃣ Vérification du style avec PHP CS Fixer
+      - name: Run PHP CS Fixer
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff
