@@ -73,12 +73,6 @@ jobs:
       - name: Run PHPUnit
         run: vendor/bin/phpunit
 
-      - name: Upload login page HTML
-        uses: actions/upload-artifact@v4
-        with:
-          name: login-page
-          path: login.html
-
       # 6️⃣ Analyse PHPStan
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse
