@@ -14,6 +14,7 @@ final class CountRatingsPerValueTest extends TestCase
 {
     /**
      * @dataProvider provideVideoGame
+     *
      * Teste le calcul du nombre de votes pour chaque valeur de note (1 à 5).
      */
     public function testShouldCountRatingPerValue(VideoGame $videoGame, NumberOfRatingPerValue $expectedNumberOfRatingPerValue): void
