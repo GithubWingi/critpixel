@@ -67,7 +67,7 @@ jobs:
           php bin/console cache:warmup --env=test
 
       - name: Compile assets (Sass)
-        run: php bin/console sass:build
+        run: php bin/console sass:build && php bin/console importmap:install
 
       # 5️⃣ Lancer les tests PHPUnit
       - name: Run PHPUnit
